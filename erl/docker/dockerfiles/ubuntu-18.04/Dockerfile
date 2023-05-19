@@ -38,8 +38,6 @@ RUN python3 -m pip install pip --upgrade
 RUN DEBIAN_FRONTEND=noninteractive apt install -y \
     sudo zsh ca-certificates curl iproute2
 
-RUN DEBIAN_FRONTEND=noninteractive apt install -y ubuntu-desktop
-
 # Kubernetes
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl

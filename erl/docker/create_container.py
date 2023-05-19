@@ -1,5 +1,6 @@
 import argparse
 import os.path
+import sys
 import socket
 from typing import List
 
@@ -9,6 +10,17 @@ import docker.errors
 from erl.docker import CONFIG_DIR
 from erl.docker.common import get_container
 from erl.log import get_logger
+
+import fcntl
+import struct
+
+
+def get_ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    addr = s.getsockname()[0]
+    s.close()
+    return addr
 
 logger = get_logger(__name__)
 
@@ -24,18 +36,20 @@ def create_container(
     environment: dict = None,
     group_add: list = None,
     mounts: list = None,
-    network: str = "host",
+    # network: str = "host",  # use default to resolve "Name or service not known"
     privileged: bool = True,
     restart_policy: dict = None,
     tty: bool = True,
     volumes: list = None,
-    user: str = None
+    user: str = None,
 ):
     client = docker.from_env()
     container = get_container(name)
     if container is not None:
         logger.warning(f"The container {name} already exist.")
         p = input("Do you want to remove the container? [y/N]")
+        if len(p) == 0:
+            p = "n"
         if p.lower() == "y":
             try:
                 if container.status != "exited":
@@ -49,6 +63,8 @@ def create_container(
             except docker.errors.APIError as e:
                 print(e)
                 exit(1)
+        elif p.lower() == "n":
+            return
 
     if command is None:
         command = "bash -l"
@@ -61,6 +77,8 @@ def create_container(
         environment = dict()
     environment["ERL_IN_CONTAINER"] = name
     environment["ERL_DOCKER_IMAGE"] = image
+    environment["TZ"] = "America/Los_Angeles"
+    environment["DOCKER_HOST"] = get_ip_address()
 
     if restart_policy is None:
         restart_policy = dict(Name="always")
@@ -81,14 +99,11 @@ def create_container(
         "/dev/char",
         "/dev/serial",
         "/dev/shm",
-        os.environ["HOME"],
     ]:
         volume_str = f"{volume}:{volume}:rw"
         if volume_str not in volumes:
             volumes.add(volume_str)
-    for volume_str in [
-        f"{CONFIG_DIR}:/mnt/docker_login:ro"
-    ]:
+    for volume_str in [f"{CONFIG_DIR}:/mnt/docker_login:ro", f"{os.environ['HOME']}:/home/{user}:rw"]:
         if volume_str not in volumes:
             volumes.add(volume_str)
     volumes = list(volumes)
@@ -105,21 +120,35 @@ def create_container(
         hostname=f"{socket.gethostname()}-container-{name}",
         mounts=mounts,
         name=name,
-        network=network,
         privileged=privileged,
         restart_policy=restart_policy,
         tty=tty,
-        user=user,
+        user=None,
         volumes=volumes,
-        working_dir=os.environ["HOME"],
+        working_dir=f"/home/{user}",
     )
 
-    for f in [
-        "passwd", "group", "shadow"
-    ]:
-        os.system(f"sudo cp /etc/{f} {os.path.join(CONFIG_DIR, f)}")
-        c.exec_run(user="root", cmd=f"cp /mnt/docker_login/{f} /etc/{f}")
-        os.system(f"sudo rm {os.path.join(CONFIG_DIR, f)}")
+    if sys.platform == "linux" and user is not None:
+        if user != "root":
+            # different linux distributions have different user information
+            # so we need to copy only the specified user information from host to container
+            logger.info(f"Copying user information from host to container {name}...")
+            for f in ["passwd", "group", "shadow"]:
+                src_file = os.path.join("/etc", f)
+                dst_file = os.path.join(CONFIG_DIR, f)
+                if not os.path.exists(src_file):
+                    logger.warn(f"{src_file} does not exist.")
+                    continue
+                os.system(f"sudo grep {user} {src_file} > {dst_file}")
+                c.exec_run(user="root", tty=True, cmd=f"bash -c 'cat {dst_file} >> {src_file}'")
+                os.system(f"sudo rm {os.path.join(CONFIG_DIR, f)}")
+            logger.info(f"Add user {user} to sudo group...")
+            c.exec_run(user="root", tty=True, cmd=f"bash -c 'usermod -aG sudo {user}'")
+    else:
+        print(f"YOU MAY NEED TO LOGIN AS ROOT TO CREATE USER {user} at first:")
+        print(f"erl-login-container --name {name} --user root")
+        print(f"adduser {user}")
+        print(f"usermod -aG sudo {user}")
 
 
 def main():
@@ -128,7 +157,7 @@ def main():
     parser.add_argument("--image", type=str, required=True)
     parser.add_argument("--command", type=str)
     parser.add_argument(
-        "--user", type=str, default=f"{os.getuid()}:{os.getgid()}", help=f"Default: {os.getuid()}:{os.getgid()}"
+        "--user", type=str, default=f"{os.environ['USER']}", help=f"Default: {os.environ['USER']}"
     )
     parser.add_argument("--overwrite-entrypoint", action="store_true")
 
@@ -136,8 +165,8 @@ def main():
     entrypoint = None
     if args.overwrite_entrypoint:
         entrypoint = args.command
-    create_container(args.name, args.image, args.command, entrypoint=entrypoint)
+    create_container(args.name, args.image, args.command, user=args.user, entrypoint=entrypoint)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

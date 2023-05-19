@@ -1,2 +1,2 @@
 #! /usr/bin/bash
-docker build -t erl-ubuntu-desktop:18.04 .
+docker build --rm -t erl/ubuntu-desktop:18.04 .
