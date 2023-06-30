@@ -22,6 +22,7 @@ def get_ip_address():
     s.close()
     return addr
 
+
 logger = get_logger(__name__)
 
 
@@ -34,6 +35,7 @@ def create_container(
     auto_remove: bool = False,
     dns: List[str] = None,
     environment: dict = None,
+    gpu: bool = False,
     group_add: list = None,
     mounts: list = None,
     # network: str = "host",  # use default to resolve "Name or service not known"
@@ -108,25 +110,61 @@ def create_container(
             volumes.add(volume_str)
     volumes = list(volumes)
 
-    c = client.containers.run(
-        image=image,
-        command=command,
-        auto_remove=auto_remove,
-        detach=True,
-        dns=dns,
-        entrypoint=entrypoint,
-        environment=environment,
-        group_add=group_add,
-        hostname=f"{socket.gethostname()}-container-{name}",
-        mounts=mounts,
-        name=name,
-        privileged=privileged,
-        restart_policy=restart_policy,
-        tty=tty,
-        user=None,
-        volumes=volumes,
-        working_dir=f"/home/{user}",
-    )
+    # c = client.containers.run(
+    #     image=image,
+    #     command=command,
+    #     auto_remove=auto_remove,
+    #     detach=True,
+    #     dns=dns,
+    #     entrypoint=entrypoint,
+    #     environment=environment,
+    #     group_add=group_add,
+    #     hostname=f"{socket.gethostname()}-container-{name}",
+    #     mounts=mounts,
+    #     name=name,
+    #     privileged=privileged,
+    #     restart_policy=restart_policy,
+    #     tty=tty,
+    #     user=None,
+    #     volumes=volumes,
+    #     working_dir=f"/home/{user}",
+    # )
+    cmd = "docker run "
+    if auto_remove:
+        cmd = cmd + "--rm "
+    if dns is not None:
+        for d in dns:
+            cmd = cmd + f"--dns {d} "
+    if environment is not None:
+        for k, v in environment.items():
+            cmd = cmd + f"-e {k}={v} "
+    if group_add is not None:
+        for g in group_add:
+            cmd = cmd + f"--group-add {g} "
+    if mounts is not None:
+        for m in mounts:
+            cmd = cmd + f"-v {m} "
+    if privileged:
+        cmd = cmd + "--privileged "
+    if restart_policy is not None:
+        cmd = cmd + f"--restart {restart_policy['Name']} "
+    if tty:
+        cmd = cmd + "-t "
+    if volumes is not None:
+        for v in volumes:
+            cmd = cmd + f"-v {v} "
+    cmd = cmd + f"--workdir /home/{user} "
+    if gpu:
+        cmd = cmd + "--gpus all "
+    cmd = cmd + "--detach "
+    cmd = cmd + f"--hostname container-{name} "
+    cmd = cmd + f"--name {name} "
+    cmd = cmd + f"{image} "
+    cmd = cmd + command
+    logger.info(f"Container {name} is created: {cmd}")
+    os.system(cmd)
+
+    c = client.containers.get(name)
 
     if sys.platform == "linux" and user is not None:
         if user != "root":
@@ -155,17 +193,16 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--name", type=str, required=True, metavar="CONTAINER_NAME")
     parser.add_argument("--image", type=str, required=True)
+    parser.add_argument("--gpu", action="store_true")
     parser.add_argument("--command", type=str)
-    parser.add_argument(
-        "--user", type=str, default=f"{os.environ['USER']}", help=f"Default: {os.environ['USER']}"
-    )
+    parser.add_argument("--user", type=str, default=f"{os.environ['USER']}", help=f"Default: {os.environ['USER']}")
     parser.add_argument("--overwrite-entrypoint", action="store_true")
 
     args = parser.parse_args()
     entrypoint = None
     if args.overwrite_entrypoint:
         entrypoint = args.command
-    create_container(args.name, args.image, args.command, user=args.user, entrypoint=entrypoint)
+    create_container(args.name, args.image, args.command, user=args.user, entrypoint=entrypoint, gpu=args.gpu)
 
 
 if __name__ == "__main__":

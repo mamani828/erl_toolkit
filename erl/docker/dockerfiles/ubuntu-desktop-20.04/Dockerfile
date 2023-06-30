@@ -1,4 +1,5 @@
-FROM ubuntu:20.04
+ARG BASE_IMAGE=ubuntu:20.04
+FROM ${BASE_IMAGE}
 
 COPY ./sources.list /etc/apt
 RUN DEBIAN_FRONTEND=noninteractive apt update -y
@@ -17,7 +18,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y \
 RUN DEBIAN_FRONTEND=noninteractive apt install -y \
     sudo zsh ca-certificates curl iproute2
 
-RUN DEBIAN_FRONTEND=noninteractive apt install -y ubuntu-desktop
+RUN DEBIAN_FRONTEND=noninteractive apt install -y ubuntu-desktop-minimal
 
 # Kubernetes
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
