@@ -193,7 +193,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--name", type=str, required=True, metavar="CONTAINER_NAME")
     parser.add_argument("--image", type=str, required=True)
-    parser.add_argument("--gpu", action="store_true")
+    parser.add_argument("--gpu", action="store_true", help="Connect all GPUs to the container")
     parser.add_argument("--command", type=str)
     parser.add_argument("--user", type=str, default=f"{os.environ['USER']}", help=f"Default: {os.environ['USER']}")
     parser.add_argument("--overwrite-entrypoint", action="store_true")

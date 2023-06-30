@@ -14,22 +14,24 @@ python3 setup.py --user develop
 - `erl-build-images`: build all images
 - `erl-create-container`:
   ```shell
-  usage: erl-create-container [-h] --name CONTAINER_NAME --image IMAGE [--command COMMAND] [--user USER] [--overwrite-entrypoint]
+  usage: erl-create-container [-h] --name CONTAINER_NAME --image IMAGE [--gpu] [--command COMMAND] [--user USER] [--overwrite-entrypoint]
 
   options:
     -h, --help            show this help message and exit
     --name CONTAINER_NAME
     --image IMAGE
+    --gpu                 Connect all GPUs to the container
     --command COMMAND
-    --user USER           Default: 1000:1000
+    --user USER           Default: daizhirui
     --overwrite-entrypoint
   ```
 - `erl-login-container`:
   ```shell
-  usage: erl-login-container [-h] --name CONTAINER_NAME [--shell SHELL]
+  usage: erl-login-container [-h] --name CONTAINER_NAME [--user USER] [--shell SHELL]
 
   options:
     -h, --help            show this help message and exit
     --name CONTAINER_NAME
+    --user USER
     --shell SHELL         Default: /usr/bin/zsh
   ```
