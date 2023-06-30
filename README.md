@@ -1,7 +1,7 @@
-erl-toolkit
+`erl_toolkit`
 ===========
 
-Ubuntu CLI for [Existential Robotics Laboratory](http://erl.ucsd.edu/)
+CLI for [Existential Robotics Laboratory](http://erl.ucsd.edu/)
 
 # Install
 
