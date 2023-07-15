@@ -9,4 +9,7 @@ def get_container(name: str):
     elif len(containers) == 1:
         return containers[0]
     else:
+        for container in containers:
+            if container.name == name:
+                return container
         raise RuntimeError(f"More than 1 container have name: {name}?!")

@@ -7,14 +7,51 @@ CLI for [Existential Robotics Laboratory](http://erl.ucsd.edu/)
 
 - Docker
 - nvidia-docker2 (nvidia-container-toolkit)
+- pip3
 
 ```shell
+# for Ubuntu
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
+    && curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+    && curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-container.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+sudo apt-get update
+sudo apt install nvidia-container-toolkit
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker
+
 # for ArchLinux
 sudo pacman -S docker
 paru -S nvidia-docker
+sudo nvidia-ctk runtime configure --runtime=docker
+sudo systemctl restart docker
+```
+
+Test installation:
+```shell
+sudo docker run --rm --runtime=nvidia --gpus all nvidia/cuda:11.6.2-base-ubuntu20.04 nvidia-smi
 ```
 
 # Patches
+
+For all Linux distributions, in order to use docker without `sudo`, we need to run:
+```shell
+sudo usermod -aG docker $USER
+newgrp docker  # or reboot your computer
+```
 
 For ArchLinux, you need to apply the following patches. Create two files:
 - `/etc/systemd/system/docker.service.d/override.conf`
@@ -30,10 +67,12 @@ Then run `sudo systemctl daemon-reload` and reboot your computer.
 # Install
 
 ```shell
-python3 setup.py install --user
+pip install . --user   # For ArchLinux, add --break-system-packages
+```
 
-# On ArchLinux, to install with system python3, if you get errors, run
-python3 setup.py install --user --break-system-packages
+Export `$HOME/.local/bin` to the `PATH` environment variable:
+```shell
+export PATH="$HOME/.local/bin:$PATH"
 ```
 
 ## Docker
