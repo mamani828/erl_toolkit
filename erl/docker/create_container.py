@@ -36,9 +36,10 @@ def create_container(
     dns: List[str] = None,
     environment: dict = None,
     gpu: bool = False,
+    dev: bool = False,
+    gui: bool = False,
     group_add: list = None,
     mounts: list = None,
-    # network: str = "host",  # use default to resolve "Name or service not known"
     privileged: bool = True,
     restart_policy: dict = None,
     tty: bool = True,
@@ -73,7 +74,10 @@ def create_container(
         auto_remove = False
 
     if dns is None:
-        dns = ["8.8.8.8", "8.8.4.4"]
+        with open("/etc/resolv.conf", "r") as file:
+            dns = file.readlines()
+        dns = [x.split(' ')[1].strip() for x in dns if x.startswith('nameserver')]
+        dns = [x for x in dns if x[0].isnumeric() and x != '127.0.0.1']
 
     if environment is None:
         environment = dict()
@@ -89,6 +93,8 @@ def create_container(
         volumes = set()
     else:
         volumes = set(volumes)
+    if gui:
+        enable_x11 = True
     if enable_x11:
         if not os.path.exists("/tmp/.X11-unix"):
             logger.warn("X11 is unavailable: /tmp/.X11-unix does not exist.")
@@ -105,6 +111,8 @@ def create_container(
         volume_str = f"{volume}:{volume}:rw"
         if volume_str not in volumes:
             volumes.add(volume_str)
+    if dev:
+        volumes.append("/dev:/dev")
     for volume_str in [f"{CONFIG_DIR}:/mnt/docker_login:ro", f"{os.environ['HOME']}:/home/{user}:rw"]:
         if volume_str not in volumes:
             volumes.add(volume_str)
@@ -156,6 +164,10 @@ def create_container(
     cmd = cmd + f"--workdir /home/{user} "
     if gpu:
         cmd = cmd + "--gpus all "
+    if gui:
+        os.system("xhost +SI:localuser:root")
+        cmd = cmd + "--net=host -e DISPLAY "
+        cmd = cmd + f"-v {os.environ['HOME']}/.Xauthority:/root/.Xauthority:rw "
     cmd = cmd + "--detach "
     cmd = cmd + f"--hostname container-{name} "
     cmd = cmd + f"--name {name} "
@@ -194,6 +206,8 @@ def main():
     parser.add_argument("--name", type=str, required=True, metavar="CONTAINER_NAME")
     parser.add_argument("--image", type=str, required=True)
     parser.add_argument("--gpu", action="store_true", help="Connect all GPUs to the container")
+    parser.add_argument("--dev", action="store_true", help="Connect all devices to the container")
+    parser.add_argument("--gui", action="store_true", help="Connect DISPLAY to the container")
     parser.add_argument("--command", type=str)
     parser.add_argument("--user", type=str, default=f"{os.environ['USER']}", help=f"Default: {os.environ['USER']}")
     parser.add_argument("--overwrite-entrypoint", action="store_true")
@@ -202,7 +216,7 @@ def main():
     entrypoint = None
     if args.overwrite_entrypoint:
         entrypoint = args.command
-    create_container(args.name, args.image, args.command, user=args.user, entrypoint=entrypoint, gpu=args.gpu)
+    create_container(args.name, args.image, args.command, user=args.user, entrypoint=entrypoint, gpu=args.gpu, gui=args.gui)
 
 
 if __name__ == "__main__":

@@ -21,6 +21,7 @@ def login_container(name: str, user: str, shell: str):
     else:
         home = f"/home/{user}"
 
+    os.system(f"xhost +si:localuser:{user}")
     os.system(f"docker exec --privileged --interactive --tty --env SHELL={shell} --env TERM={os.environ['TERM']} "
               f"--env USER={user} --env=DISPLAY --env=QT_X11_NO_MITSHM=1 --user {user} "
               f"--env HOME={home} {name} {shell} -l")
