@@ -12,12 +12,14 @@ def build_images():
         idx = tag.rfind('-')
         tag = f"{tag[:idx]}:{tag[idx + 1:]}"
         print(f"Building {tag} ... ", end='', flush=True)
-        client.images.build(
-            path=os.path.dirname(dockerfile),
-            tag=tag,
-            rm=True,
-            quiet=False
-        )
+        os.chdir(os.path.dirname(dockerfile))
+        os.system("bash build.bash")
+        # client.images.build(
+        #     path=os.path.dirname(dockerfile),
+        #     tag=tag,
+        #     rm=True,
+        #     quiet=False,
+        # )
         print("DONE", flush=True)
 
 
