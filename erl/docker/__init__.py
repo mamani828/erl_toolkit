@@ -8,4 +8,10 @@ CONTAINER_SHELL = os.environ["SHELL"]
 
 DOCKERFILES_DIR = os.path.dirname(os.path.abspath(__file__))
 DOCKERFILES_DIR = os.path.join(DOCKERFILES_DIR, "dockerfiles")
-DOCKERFILES = glob.glob(f"{DOCKERFILES_DIR}/**/Dockerfile", recursive=True)
+DOCKERFILES = [
+    os.path.join(DOCKERFILES_DIR, "ubuntu-18.04/Dockerfile"),
+    os.path.join(DOCKERFILES_DIR, "ubuntu-desktop-18.04/Dockerfile"),
+    os.path.join(DOCKERFILES_DIR, "ubuntu-desktop-20.04/Dockerfile"),
+    os.path.join(DOCKERFILES_DIR, "ubuntu-desktop-22.04/Dockerfile"),
+    os.path.join(DOCKERFILES_DIR, "ros-noetic/Dockerfile"),
+]

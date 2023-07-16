@@ -34,7 +34,7 @@ sudo nvidia-ctk runtime configure --runtime=docker
 sudo systemctl restart docker
 
 # for ArchLinux
-sudo pacman -S docker
+sudo pacman -S docker docker-buildx
 paru -S nvidia-docker
 sudo nvidia-ctk runtime configure --runtime=docker
 sudo systemctl restart docker
