@@ -4,7 +4,7 @@ COPY ./sources.list /etc/apt
 RUN DEBIAN_FRONTEND=noninteractive apt update -y
 
 RUN DEBIAN_FRONTEND=noninteractive apt install -y \
-    software-properties-common lsb-release wget vim
+    software-properties-common lsb-release wget vim locales
 
 # cmake
 RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
@@ -27,12 +27,9 @@ RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
 # Python 3.8 and pip
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN DEBIAN_FRONTEND=noninteractive apt update -y
-RUN DEBIAN_FRONTEND=noninteractive apt install -y python3.8-full python3.8-dev
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 2
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 2
-RUN python3 -m ensurepip --upgrade
+RUN DEBIAN_FRONTEND=noninteractive apt install -y python3.8 python3.8-dev python3-pip
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1
 RUN python3 -m pip install pip --upgrade
 
 RUN DEBIAN_FRONTEND=noninteractive apt install -y \
@@ -41,6 +38,12 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y \
 # Kubernetes
 RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# set locale
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
 
 # clean
 RUN apt-get clean  && rm -rf /var/lib/apt/lists/*

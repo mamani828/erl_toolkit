@@ -23,7 +23,8 @@ setup(
         console_scripts=[
             "erl-create-container=erl.docker.create_container:main",
             "erl-login-container=erl.docker.login_container:main",
-            "erl-build-images=erl.docker.build_images:main"
+            "erl-build-images=erl.docker.build_images:main",
+            "erl-clean-docker=erl.docker.clean_docker:main"
         ]
     )
 )

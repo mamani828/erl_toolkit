@@ -75,7 +75,7 @@ Export `$HOME/.local/bin` to the `PATH` environment variable:
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-## Docker
+# Usage
 
 - `erl-build-images`: build all images
 - `erl-create-container`:
@@ -103,3 +103,15 @@ options:
     --user USER
     --shell SHELL         Default: /usr/bin/zsh
   ```
+# FAQ
+## Strange cursor position when the last command returns error in zsh
+This is already fixed by updating the dockerfiles. But if you do not want to rebuild all the images. You can run the following commands in your current container:
+```shell
+sudo apt update
+sudo apt install locales
+sudo sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen
+sudo locale-gen
+export LANG en_US.UTF-8  
+export LANGUAGE en_US:en  
+export LC_ALL en_US.UTF-8
+```
