@@ -1,6 +1,6 @@
 import os
 import subprocess
-from erl.log import get_logger
+from erl_toolkit.log import get_logger
 
 
 logger = get_logger(__name__)

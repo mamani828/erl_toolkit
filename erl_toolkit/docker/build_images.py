@@ -2,7 +2,7 @@ import os
 
 import docker
 
-from erl.docker import DOCKERFILES
+from erl_toolkit.docker import DOCKERFILES
 
 
 def build_images():

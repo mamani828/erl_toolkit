@@ -7,9 +7,9 @@ from typing import List
 import docker
 import docker.errors
 
-from erl.docker import CONFIG_DIR
-from erl.docker.common import get_container
-from erl.log import get_logger
+from erl_toolkit.docker import CONFIG_DIR
+from erl_toolkit.docker.common import get_container
+from erl_toolkit.log import get_logger
 
 import fcntl
 import struct
@@ -76,8 +76,8 @@ def create_container(
     if dns is None:
         with open("/etc/resolv.conf", "r") as file:
             dns = file.readlines()
-        dns = [x.split(' ')[1].strip() for x in dns if x.startswith('nameserver')]
-        dns = [x for x in dns if x[0].isnumeric() and x != '127.0.0.1']
+        dns = [x.split(" ")[1].strip() for x in dns if x.startswith("nameserver")]
+        dns = [x for x in dns if x[0].isnumeric() and x != "127.0.0.1"]
 
     if environment is None:
         environment = dict()
@@ -164,6 +164,8 @@ def create_container(
     cmd = cmd + f"--workdir /home/{user} "
     if gpu:
         cmd = cmd + "--gpus all "
+    if entrypoint is not None:
+        cmd = cmd + f"--entrypoint {entrypoint} "
     if gui:
         os.system("xhost +SI:localuser:root")
         cmd = cmd + "--net=host -e DISPLAY "
@@ -211,12 +213,34 @@ def main():
     parser.add_argument("--command", type=str)
     parser.add_argument("--user", type=str, default=f"{os.environ['USER']}", help=f"Default: {os.environ['USER']}")
     parser.add_argument("--overwrite-entrypoint", action="store_true")
+    parser.add_argument("--mounts", type=str, action="append", help="Mount host directory to container")
 
     args = parser.parse_args()
     entrypoint = None
     if args.overwrite_entrypoint:
         entrypoint = args.command
-    create_container(args.name, args.image, args.command, user=args.user, entrypoint=entrypoint, gpu=args.gpu, gui=args.gui)
+    if args.mounts is not None:
+        mounts = []
+        for mount in args.mounts:
+            if ":" in mount:
+                mount = mount.split(":")
+                mount[0] = os.path.abspath(mount[0])
+                mount = ":".join(mount)
+            else:
+                mount = os.path.abspath(mount)
+                mount = f"{mount}:{mount}"
+            mounts.append(mount)
+        args.mounts = mounts
+    create_container(
+        args.name,
+        args.image,
+        args.command,
+        user=args.user,
+        entrypoint=entrypoint,
+        gpu=args.gpu,
+        gui=args.gui,
+        mounts=args.mounts,
+    )
 
 
 if __name__ == "__main__":

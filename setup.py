@@ -11,7 +11,7 @@ with open(os.path.join(src_dir, "requirements.txt"), "r") as file:
 
 os.chdir(src_dir)
 
-pkg_name = "erl"
+pkg_name = "erl_toolkit"
 setup(
     name=pkg_name,
     version="0.1.0",
@@ -21,10 +21,12 @@ setup(
     include_package_data=True,
     entry_points=dict(
         console_scripts=[
-            "erl-create-container=erl.docker.create_container:main",
-            "erl-login-container=erl.docker.login_container:main",
-            "erl-build-images=erl.docker.build_images:main",
-            "erl-clean-docker=erl.docker.clean_docker:main"
+            f"erl-docker-create-container={pkg_name}.docker.create_container:main",
+            f"erl-docker-login-container={pkg_name}.docker.login_container:main",
+            f"erl-docker-build-images={pkg_name}.docker.build_images:main",
+            f"erl-docker-clean-docker={pkg_name}.docker.clean_docker:main",
+            f"erl-archlinux-ros-noetic-install={pkg_name}.archlinux.ros_noetic.install:main",
+            f"erl-archlinux-paru-helper={pkg_name}.archlinux.paru_helper:main",
         ]
     )
 )

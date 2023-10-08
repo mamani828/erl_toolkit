@@ -77,23 +77,24 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Usage
 
-- `erl-build-images`: build all images
-- `erl-create-container`:
+- `erl-docker-build-images`: build all images
+- `erl-docker-create-container`:
   ```shell
-usage: erl-create-container [-h] --name CONTAINER_NAME --image IMAGE [--gpu] [--dev] [--gui] [--command COMMAND] [--user USER] [--overwrite-entrypoint]
+  usage: erl-docker-create-container [-h] --name CONTAINER_NAME --image IMAGE [--gpu] [--dev] [--gui] [--command COMMAND] [--user USER] [--overwrite-entrypoint] [--mounts MOUNTS]
 
-options:
-  -h, --help            show this help message and exit
-  --name CONTAINER_NAME
-  --image IMAGE
-  --gpu                 Connect all GPUs to the container
-  --dev                 Connect all devices to the container
-  --gui                 Connect DISPLAY to the container
-  --command COMMAND
-  --user USER           Default: $USER
-  --overwrite-entrypoint
+  options:
+    -h, --help            show this help message and exit
+    --name CONTAINER_NAME
+    --image IMAGE
+    --gpu                 Connect all GPUs to the container
+    --dev                 Connect all devices to the container
+    --gui                 Connect DISPLAY to the container
+    --command COMMAND
+    --user USER           Default: xxxx
+    --overwrite-entrypoint
+    --mounts MOUNTS       Mount host directory to container
   ```
-- `erl-login-container`:
+- `erl-docker-login-container`:
   ```shell
   usage: erl-login-container [-h] --name CONTAINER_NAME [--user USER] [--shell SHELL]
 
@@ -103,8 +104,47 @@ options:
     --user USER
     --shell SHELL         Default: /usr/bin/zsh
   ```
-- `erl-clean-docker`: remove stopped containers and redundant image layers.
+- `erl-docker-clean-docker`: remove stopped containers and redundant image layers.
+- `erl-archlinux-ros-noetic-install`: install or fix `ros-noetic-desktop-full` for ArchLinux.
+  ```
+  usage: erl-archlinux-ros-noetic-install [-h] [--start-from PACKAGES [PACKAGES ...]]
 
+  Install/fix ros-noetic-desktop-full and its dependencies.
+
+  options:
+    -h, --help            show this help message and exit
+    --start-from PACKAGES [PACKAGES ...]
+                          Start the installation from these packages, and install other packages requiring them.
+  ```
+- `erl-archlinux-paru-helper`: a tool to help you resolve AUR package issues.
+  ```
+  usage: erl-archlinux-paru-helper [--help] COMMAND ...
+
+  paru helper
+
+  positional arguments:
+    COMMAND     Options: dump-required-dependencies
+
+  options:
+    --help, -h  show this help message and exit
+
+  Command: dump-required-dependencies
+  usage: erl-archlinux-paru-helper dump-required-dependencies [-h] [--sink-packages PACKAGES [PACKAGES ...]] [--is-sink-package LAMBDA_EXPRESSION] [--ignore-packages PACKAGES [PACKAGES ...]] [--output-format {raw,yaml}] package_name
+
+  positional arguments:
+    package_name
+
+  options:
+    -h, --help            show this help message and exit
+    --sink-packages PACKAGES [PACKAGES ...]
+                          Initial sink packages, dependency search will stop when these packages are hit.
+    --is-sink-package LAMBDA_EXPRESSION
+                          lambda expression to determine whether a package is a sink package.
+    --ignore-packages PACKAGES [PACKAGES ...]
+                          Ignore these packages. They will not be in the result.
+    --output-format {raw,yaml}
+                          Output format.
+  ```
 # FAQ
 ## Strange cursor position when the last command returns error in zsh
 This is already fixed by updating the dockerfiles. But if you do not want to rebuild all the images. You can run the following commands in your current container:

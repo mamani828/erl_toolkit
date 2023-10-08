@@ -3,9 +3,9 @@ import os
 
 import docker
 
-from erl.docker import CONTAINER_SHELL
-from erl.docker.common import get_container
-from erl.log import get_logger
+from erl_toolkit.docker import CONTAINER_SHELL
+from erl_toolkit.docker.common import get_container
+from erl_toolkit.log import get_logger
 
 logger = get_logger(__name__)
 
