@@ -145,15 +145,10 @@ def test():
 
 
 def main():
-
     class CompleteHelpAction(HelpAction):
         def __call__(self, parser, namespace, values, option_string=None):
             parser.print_help()
-            subparsers_actions = [
-                action
-                for action in parser._actions
-                if isinstance(action, SubParsersAction)
-            ]
+            subparsers_actions = [action for action in parser._actions if isinstance(action, SubParsersAction)]
             print()
             for subparsers_action in subparsers_actions:
                 for choice, subparser in subparsers_action.choices.items():
@@ -165,13 +160,10 @@ def main():
     parser = ArgumentParser(description="paru helper", add_help=False)
     parser.add_argument("--help", "-h", action=CompleteHelpAction, help="show this help message and exit")
     subparsers = parser.add_subparsers(
-        dest="command",
-        required=True,
-        metavar="COMMAND",
-        help="Options: dump-required-dependencies"
+        dest="command", required=True, metavar="COMMAND", help="Options: dump-required-dependencies"
     )
     parser_dump_required_dependencies = subparsers.add_parser("dump-required-dependencies")
-    parser_dump_required_dependencies.add_argument("package_name", type=str)
+    parser_dump_required_dependencies.add_argument("package_names", type=str, nargs="+", metavar="PACKAGE_NAMES")
     parser_dump_required_dependencies.add_argument(
         "--sink-packages",
         nargs="+",
@@ -208,7 +200,11 @@ def main():
             is_sink_package = eval(args.is_sink_package)
         else:
             is_sink_package = None
-        dependencies = dump_required_dependencies(args.package_name, sink_packages, is_sink_package, ignore_packages)
+        dependencies = dict()
+        for package_name in args.package_names:
+            dependencies.update(
+                dump_required_dependencies(package_name, sink_packages, is_sink_package, ignore_packages)
+            )
         if args.output_format == "raw":
             print("sink_packages:")
             print(sorted(list(sink_packages)))

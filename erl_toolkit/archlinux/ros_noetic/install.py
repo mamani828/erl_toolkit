@@ -23,6 +23,7 @@ alternative_selections = {
     "sip": "python-sip",
     "python-pyqt5": "python-pyqt5-sip4",
     "python-numpy": "python-numpy-mkl",
+    "ogre": "ogre-1.9",
 }
 
 use_git_packages = [
@@ -44,6 +45,7 @@ aur_package_urls = {
     "ros-noetic-depth-image-proc": "https://github.com/daizhirui/ros-noetic-depth-image-proc.git",
     "ros-noetic-laser-assembler": "https://github.com/daizhirui/ros-noetic-laser-assembler.git",
     "ros-noetic-laser-filters": "https://github.com/daizhirui/ros-noetic-laser-filters.git",
+    "ros-noetic-robot-localization": "https://github.com/daizhirui/ros-noetic-robot-localization.git",
 }
 
 parser = ArgumentParser(description="Install/fix ros-noetic-desktop-full and its dependencies.")
