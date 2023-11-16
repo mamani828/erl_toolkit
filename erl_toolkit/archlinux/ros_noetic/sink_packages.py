@@ -32,7 +32,6 @@ sink_packages = [
     "hddtemp",
     "ignition-cmake-2",
     "ignition-common-3",
-    "ignition-fuel_tools-4",
     "ignition-math-6",
     "ignition-msgs-5",
     "ignition-transport-8",

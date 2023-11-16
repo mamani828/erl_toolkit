@@ -11,6 +11,11 @@ RUN DEBIAN_FRONTEND=noninteractive apt install -y \
     python3-rosinstall \
     python3-rosinstall-generator \
     python3-wstool \
-    python3-catkin-tools
-RUN sudo rosdep init && sudo rosdep fix-permissions
+    python3-catkin-tools \
+    python3-pip \
+    python3-numpy \
+    python3-toml \
+    python3-scipy \
+    python3-tqdm
+    RUN sudo rosdep init && sudo rosdep fix-permissions
 RUN apt-get clean  && rm -rf /var/lib/apt/lists/*

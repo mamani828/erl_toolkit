@@ -2447,5 +2447,9 @@ dependencies = {
         "libxmu",
         "pagmo",
         "fmt",
+    ],
+    "ignition-fuel_tools-4": [
+        "ignition-common-3",
+        "ignition-msgs-5",
     ]
 }

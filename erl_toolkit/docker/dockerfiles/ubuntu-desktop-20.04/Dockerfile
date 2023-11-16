@@ -5,7 +5,8 @@ COPY ./sources.list /etc/apt
 RUN DEBIAN_FRONTEND=noninteractive apt update -y
 
 RUN DEBIAN_FRONTEND=noninteractive apt install -y \
-    software-properties-common lsb-release wget vim locales
+    software-properties-common lsb-release wget vim locales apt-utils \
+    python3 python3-pip python3-dev python3-setuptools python3-wheel
 
 # cmake
 RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
