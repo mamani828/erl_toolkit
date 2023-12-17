@@ -34,15 +34,10 @@ def main():
         "fcl",
     ]
 
+    # place replacement urls here if the package is not available in AUR or the AUR package is broken
     aur_package_urls = {
         "sip4": "https://github.com/daizhirui/sip4.git",
-        "pcl-git": "https://github.com/daizhirui/pcl-git.git",
-        "libdart": "https://github.com/daizhirui/AUR-libdart.git",
-        "gazebo-git": "https://github.com/daizhirui/aur-gazebo-git.git",
-        "ros-noetic-qt-gui-cpp": "https://github.com/daizhirui/ros-noetic-qt-gui-cpp.git",
-        "ros-noetic-pybind11-catkin": "https://github.com/daizhirui/ros-noetic-pybind11-catkin.git",
         "ros-noetic-robot-state-publisher": "https://github.com/daizhirui/ros-noetic-robot-state-publisher.git",
-        "ros-noetic-rosbag": "https://github.com/daizhirui/ros-noetic-rosbag.git",
         "ros-noetic-depth-image-proc": "https://github.com/daizhirui/ros-noetic-depth-image-proc.git",
         "ros-noetic-laser-assembler": "https://github.com/daizhirui/ros-noetic-laser-assembler.git",
         "ros-noetic-laser-filters": "https://github.com/daizhirui/ros-noetic-laser-filters.git",
