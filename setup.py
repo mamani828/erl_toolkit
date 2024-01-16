@@ -27,6 +27,7 @@ setup(
             f"erl-docker-clean-docker={pkg_name}.docker.clean_docker:main",
             f"erl-archlinux-ros-noetic-install={pkg_name}.archlinux.ros_noetic.install:main",
             f"erl-archlinux-paru-helper={pkg_name}.archlinux.paru_helper:main",
+            f"erl-archlinux-check-library-dependencies={pkg_name}.archlinux.check_library_dependencies:main",
         ]
     )
 )
