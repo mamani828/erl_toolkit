@@ -111,4 +111,5 @@ sink_packages = [
     "urdfdom-headers",
     "util-linux",
     "yaml-cpp",
+    "libraw1394",
 ]

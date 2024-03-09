@@ -42,6 +42,7 @@ def main():
     # place replacement urls here if the package is not available in AUR or the AUR package is broken
     aur_package_urls = {
         # "sip4": "https://github.com/daizhirui/sip4.git",
+        "ros-noetic-rosconsole": "https://github.com/daizhirui/ros-noetic-rosconsole.git",
         "ros-noetic-robot-state-publisher": "https://github.com/daizhirui/ros-noetic-robot-state-publisher.git",
         "ros-noetic-depth-image-proc": "https://github.com/daizhirui/ros-noetic-depth-image-proc.git",
         "ros-noetic-laser-assembler": "https://github.com/daizhirui/ros-noetic-laser-assembler.git",
@@ -166,6 +167,11 @@ def main():
                             continue
                         else:
                             os.system(f"paru -G {package}")
+                else:
+                    if package in aur_package_urls:
+                        os.chdir(package)
+                        os.system(f"git remote set-url origin {aur_package_urls[package]}")
+                        os.chdir(paru_dir)
                 os.chdir(package)
                 if package in aur_package_urls:
                     os.system(f"git remote set-url origin {aur_package_urls[package]}")
