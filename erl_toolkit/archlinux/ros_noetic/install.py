@@ -30,6 +30,7 @@ def main():
         "tbb": "onetbb",
         "gmock": "gtest",
         "libltdl": "libtool",
+        "python-empy": "python-empy3",
     }
 
     use_git_packages = [
