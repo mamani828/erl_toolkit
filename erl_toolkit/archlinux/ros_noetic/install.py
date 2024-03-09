@@ -49,6 +49,7 @@ def main():
         "ros-noetic-laser-assembler": "https://github.com/daizhirui/ros-noetic-laser-assembler.git",
         "ros-noetic-laser-filters": "https://github.com/daizhirui/ros-noetic-laser-filters.git",
         "ros-noetic-robot-localization": "https://github.com/daizhirui/ros-noetic-robot-localization.git",
+        "orocos-kdl-python": "https://github.com/daizhirui/arch-orocos-kdl-python.git",
     }
 
     parser = ArgumentParser(description="Install/fix ros-noetic-desktop-full and its dependencies.")
@@ -176,7 +177,7 @@ def main():
                 os.chdir(package)
                 if package in aur_package_urls:
                     os.system(f"git remote set-url origin {aur_package_urls[package]}")
-                os.system("git pull")  # update the package
+                os.system("git pull --rebase")  # update the package
                 if os.system("makepkg -si --noconfirm -c") != 0:
                     exit_on_failure(f"paru -S {package} --noconfirm")
                 exit_on_failure("rm -rf pkg src *.pkg.tar.zst")
