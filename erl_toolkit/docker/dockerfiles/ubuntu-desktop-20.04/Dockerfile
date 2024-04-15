@@ -16,6 +16,14 @@ RUN DEBIAN_FRONTEND=noninteractive apt install kitware-archive-keyring
 RUN DEBIAN_FRONTEND=noninteractive apt install -y \
     cmake build-essential
 
+# git
+RUN add-apt-repository ppa:git-core/ppa -y
+RUN DEBIAN_FRONTEND=noninteractive apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+RUN wget https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.4.1/gcm-linux_amd64.2.4.1.deb
+RUN dpkg -i gcm-linux_amd64.2.4.1.deb
+RUN rm gcm-linux_amd64.2.4.1.deb
+
 RUN DEBIAN_FRONTEND=noninteractive apt install -y \
     sudo zsh ca-certificates curl iproute2
 

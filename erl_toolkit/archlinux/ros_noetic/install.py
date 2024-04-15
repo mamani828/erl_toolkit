@@ -21,7 +21,6 @@ def main():
         "pkg-config": "pkgconf",
         "opencv": "opencv-cuda",
         "python-sip4": "sip4",
-        "sip": "python-sip",
         "python-pyqt5": "python-pyqt5-sip4",
         "python-numpy": "python-numpy-mkl",
         "ogre": "ogre-1.9",
@@ -43,12 +42,75 @@ def main():
     # place replacement urls here if the package is not available in AUR or the AUR package is broken
     aur_package_urls = {
         # "sip4": "https://github.com/daizhirui/sip4.git",
+        "ros-noetic-amcl": "https://github.com/daizhirui/ros-noetic-amcl.git",
+        "ros-noetic-base-local-planner": "https://github.com/daizhirui/ros-noetic-base-local-planner.git",
+        "ros-noetic-camera-calibration": "https://github.com/daizhirui/ros-noetic-camera-calibration.git",
+        "ros-noetic-camera-calibration-parser": "https://github.com/daizhirui/ros-noetic-camera-calibration-parser.git",
+        "ros-noetic-camera-info-manager": "https://github.com/daizhirui/ros-noetic-camera-info-manager.git",
+        "ros-noetic-catkin": "https://github.com/daizhirui/ros-noetic-catkin.git",
+        "ros-noetic-costmap-2d": "https://github.com/daizhirui/ros-noetic-costmap-2d.git",
+        "ros-noetic-compressed-depth-image-transport": "https://github.com/daizhirui/ros-noetic-compressed-depth-image-transport.git",
+        "ros-noetic-compressed-image-transport": "https://github.com/daizhirui/ros-noetic-compressed-image-transport.git",
+        "ros-noetic-controller-interface": "https://github.com/daizhirui/ros-noetic-controller-interface.git",
+        "ros-noetic-controller-manager": "https://github.com/daizhirui/ros-noetic-controller-manager.git",
+        "ros-noetic-controller-manager-msgs": "https://github.com/daizhirui/ros-noetic-controller-manager-msgs.git",
+        "ros-noetic-cpp-common": "https://github.com/daizhirui/ros-noetic-cpp-common.git",
+        "ros-noetic-diff-drive-controller": "https://github.com/daizhirui/ros-noetic-diff-drive-controller.git",
+        "ros-noetic-dynamic-reconfigure": "https://github.com/daizhirui/ros-noetic-dynamic-reconfigure.git",
+        "ros-noetic-eigen-conversions": "https://github.com/ros-noetic-arch/ros-noetic-eigen-conversions.git",
+        "ros-noetic-rqt-action": "https://github.com/daizhirui/ros-noetic-rqt-action.git",
+        "ros-noetic-rqt-bag": "https://github.com/daizhirui/ros-noetic-rqt-bag.git",
+        "ros-noetic-rqt-bag-plugins": "https://github.com/daizhirui/ros-noetic-rqt-bag-plugins.git",
+        "ros-noetic-rqt-console": "https://github.com/daizhirui/ros-noetic-rqt-console.git",
+        "ros-noetic-rqt-dep": "https://github.com/daizhirui/ros-noetic-rqt-dep.git",
+        "ros-noetic-rqt-graph": "https://github.com/daizhirui/ros-noetic-rqt-graph.git",
+        "ros-noetic-rqt-image-view": "https://github.com/daizhirui/ros-noetic-rqt-image-view.git",
+        "ros-noetic-rqt-launch": "https://github.com/daizhirui/ros-noetic-rqt-launch.git",
+        "ros-noetic-rqt-logger-level": "https://github.com/daizhirui/ros-noetic-rqt-logger-level.git",
+        "ros-noetic-rqt-moveit": "https://github.com/daizhirui/ros-noetic-rqt-moveit.git",
+        "ros-noetic-rqt-msg": "https://github.com/daizhirui/ros-noetic-rqt-msg.git",
+        "ros-noetic-rqt-nav-view": "https://github.com/daizhirui/ros-noetic-rqt-nav-view.git",
+        "ros-noetic-rqt-pose-view": "https://github.com/daizhirui/ros-noetic-rqt-pose-view.git",
+        "ros-noetic-rqt-publisher": "https://github.com/daizhirui/ros-noetic-rqt-publisher.git",
+        "ros-noetic-rqt-py-console": "https://github.com/daizhirui/ros-noetic-rqt-py-console.git",
+        "ros-noetic-forward-command-controller": "https://github.com/daizhirui/ros-noetic-forward-command-controller.git",
+        "ros-noetic-genpy": "https://github.com/daizhirui/ros-noetic-genpy.git",
+        "ros-noetic-hardware-interface": "https://github.com/daizhirui/ros-noetic-hardware-interface.git",
+        "ros-noetic-image-pipeline": "https://github.com/daizhirui/ros-noetic-image-pipeline.git",
+        "ros-noetic-image-proc": "https://github.com/daizhirui/ros-noetic-image-proc.git",
+        "ros-noetic-image-publisher": "https://github.com/daizhirui/ros-noetic-image-publisher.git",
+        "ros-noetic-image-rotate": "https://github.com/daizhirui/ros-noetic-image-rotate.git",
+        "ros-noetic-image-transport": "https://github.com/daizhirui/ros-noetic-image-transport.git",
+        "ros-noetic-image-transport-plugins": "https://github.com/daizhirui/ros-noetic-image-transport-plugins.git",
+        "ros-noetic-image-view": "https://github.com/daizhirui/ros-noetic-image-view.git",
         "ros-noetic-rosconsole": "https://github.com/daizhirui/ros-noetic-rosconsole.git",
         "ros-noetic-robot-state-publisher": "https://github.com/daizhirui/ros-noetic-robot-state-publisher.git",
         "ros-noetic-depth-image-proc": "https://github.com/daizhirui/ros-noetic-depth-image-proc.git",
         "ros-noetic-laser-assembler": "https://github.com/daizhirui/ros-noetic-laser-assembler.git",
         "ros-noetic-laser-filters": "https://github.com/daizhirui/ros-noetic-laser-filters.git",
         "ros-noetic-robot-localization": "https://github.com/daizhirui/ros-noetic-robot-localization.git",
+        "ros-noetic-joint-state-controller": "https://github.com/daizhirui/ros-noetic-joint-state-controller.git",
+        "ros-noetic-joint-limits-interface": "https://github.com/daizhirui/ros-noetic-joint-limits-interface.git",
+        "ros-noetic-roscpp-core": "https://github.com/daizhirui/ros-noetic-roscpp-core.git",
+        "ros-noetic-rostime": "https://github.com/daizhirui/ros-noetic-rostime.git",
+        "ros-noetic-roscpp-traits": "https://github.com/daizhirui/ros-noetic-roscpp-traits.git",
+        "ros-noetic-joint-state-publisher-gui": "https://github.com/daizhirui/ros-noetic-joint-state-publisher-gui.git",
+        "ros-noetic-roscpp": "https://github.com/daizhirui/ros-noetic-roscpp.git",
+        "ros-noetic-roscpp-serialization": "https://github.com/daizhirui/ros-noetic-roscpp-serialization.git",
+        "ros-noetic-roscpp-tutorials": "https://github.com/daizhirui/ros-noetic-roscpp-tutorials.git",
+        "ros-noetic-roslaunch": "https://github.com/daizhirui/ros-noetic-roslaunch.git",
+        "ros-noetic-roslib": "https://github.com/daizhirui/ros-noetic-roslib.git",
+        "ros-noetic-rosgraph": "https://github.com/daizhirui/ros-noetic-rosgraph.git",
+        "ros-noetic-kdl-conversions": "https://github.com/daizhirui/ros-noetic-kdl-conversions.git",
+        "ros-noetic-map-server": "https://github.com/daizhirui/ros-noetic-map-server.git",
+        "ros-noetic-move-base": "https://github.com/daizhirui/ros-noetic-move-base.git",
+        "ros-noetic-nav-core": "https://github.com/daizhirui/ros-noetic-nav-core.git",
+        "ros-noetic-navfn": "https://github.com/daizhirui/ros-noetic-navfn.git",
+        "ros-noetic-nodelet": "https://github.com/daizhirui/ros-noetic-nodelet.git",
+        "ros-noetic-nodelet-core": "https://github.com/daizhirui/ros-noetic-nodelet-core.git",
+        "ros-noetic-nodelet-topic-tools": "https://github.com/daizhirui/ros-noetic-nodelet-topic-tools.git",
+        "ros-noetic-pcl-conversions": "https://github.com/daizhirui/ros-noetic-pcl-conversions.git",
+        "ros-noetic-pcl-msgs": "https://github.com/daizhirui/ros-noetic-pcl-msgs.git",
         "orocos-kdl-python": "https://github.com/daizhirui/arch-orocos-kdl-python.git",
     }
 
@@ -177,10 +239,14 @@ def main():
                 os.chdir(package)
                 if package in aur_package_urls:
                     os.system(f"git remote set-url origin {aur_package_urls[package]}")
+                os.system("git reset --hard")
                 os.system("git pull --rebase")  # update the package
-                if os.system("makepkg -si --noconfirm -c") != 0:
+                if os.system("makepkg -si --noconfirm -c") != 0:  # dependencies are incomplete?
+                    with open("../ros-noetic-install.log", "a") as log_file:
+                        log_file.write(f"makepkg failed for {package}, some dependencies may not be recorded\n")
                     exit_on_failure(f"paru -S {package} --noconfirm")
-                exit_on_failure("rm -rf pkg src *.pkg.tar.zst")
+                # exit_on_failure("rm -rf pkg src *.pkg.tar.zst")
+                exit_on_failure("rm -rf pkg src")
                 os.chdir(paru_dir)
                 installed_packages.add(package)
                 progress.write(f"{package}\n")

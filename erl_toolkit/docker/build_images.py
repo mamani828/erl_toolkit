@@ -14,12 +14,6 @@ def build_images():
         print(f"Building {tag} ... ", end='', flush=True)
         os.chdir(os.path.dirname(dockerfile))
         os.system("bash build.bash")
-        # client.images.build(
-        #     path=os.path.dirname(dockerfile),
-        #     tag=tag,
-        #     rm=True,
-        #     quiet=False,
-        # )
         print("DONE", flush=True)
 
 

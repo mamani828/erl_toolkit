@@ -13,5 +13,6 @@ DOCKERFILES = [
     os.path.join(DOCKERFILES_DIR, "ubuntu-desktop-18.04/Dockerfile"),
     os.path.join(DOCKERFILES_DIR, "ubuntu-desktop-20.04/Dockerfile"),
     os.path.join(DOCKERFILES_DIR, "ubuntu-desktop-22.04/Dockerfile"),
+    os.path.join(DOCKERFILES_DIR, "ubuntu-desktop-dev/Dockerfile"),
     os.path.join(DOCKERFILES_DIR, "ros-noetic/Dockerfile"),
 ]

@@ -1,4 +1,4 @@
-ARG CUDA_VERSION="12.1.1-cudnn8-devel-ubuntu20.04"
+ARG CUDA_VERSION="12.3.2-cudnn9-devel-ubuntu20.04"
 ARG BASE_IMAGE=erl/ubuntu-desktop:${CUDA_VERSION}
 FROM ${BASE_IMAGE}
 
