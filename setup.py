@@ -28,6 +28,9 @@ setup(
             f"erl-archlinux-ros-noetic-install={pkg_name}.archlinux.ros_noetic.install:main",
             f"erl-archlinux-paru-helper={pkg_name}.archlinux.paru_helper:main",
             f"erl-archlinux-check-library-dependencies={pkg_name}.archlinux.check_library_dependencies:main",
+            f"erl-pdf-images2pdf={pkg_name}.pdf.images2pdf:main",
+            f"erl-pdf-pdf2images={pkg_name}.pdf.pdf2images:main",
+            f"erl-pdf-merge-pdfs={pkg_name}.pdf.merge_pdfs:main",
         ]
     )
 )

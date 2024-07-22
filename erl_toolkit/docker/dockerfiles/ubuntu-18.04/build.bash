@@ -1,2 +1,5 @@
 #! /usr/bin/bash
-docker build --rm -t erl/ubuntu:18.04 .
+set -e
+set -x
+
+docker build --rm -t erl/ubuntu:18.04 $@ .

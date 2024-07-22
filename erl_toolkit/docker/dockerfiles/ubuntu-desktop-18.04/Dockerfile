@@ -5,7 +5,8 @@ COPY ./sources.list /etc/apt
 RUN DEBIAN_FRONTEND=noninteractive apt update -y
 
 RUN DEBIAN_FRONTEND=noninteractive apt install -y \
-    software-properties-common lsb-release wget vim locales apt-utils
+    software-properties-common lsb-release wget vim locales apt-utils \
+    sudo zsh ca-certificates curl iproute2 ubuntu-desktop
 
 # cmake
 RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
@@ -35,14 +36,10 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 2
 RUN python3 -m pip install pip --upgrade
 
-RUN DEBIAN_FRONTEND=noninteractive apt install -y \
-    sudo zsh ca-certificates curl iproute2
-
-RUN DEBIAN_FRONTEND=noninteractive apt install -y ubuntu-desktop
 
 # Kubernetes
-RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 # set locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
@@ -55,3 +52,5 @@ RUN apt-get clean  && rm -rf /var/lib/apt/lists/*
 
 ENV TZ="America/Los_Angeles"
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# reset DEBIAN_FRONTEND
+ENV DEBIAN_FRONTEND=

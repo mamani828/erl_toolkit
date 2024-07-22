@@ -11,9 +11,6 @@ from erl_toolkit.docker import CONFIG_DIR
 from erl_toolkit.docker.common import get_container
 from erl_toolkit.log import get_logger
 
-import fcntl
-import struct
-
 
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
