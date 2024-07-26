@@ -1,6 +1,6 @@
 FROM erl/ros-noetic:12.3.2-cudnn9-devel-ubuntu20.04
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /root
 
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.2/zsh-in-docker.sh)" -- \

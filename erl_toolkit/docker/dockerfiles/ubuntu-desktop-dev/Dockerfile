@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=ubuntu-desktop-20.04
 FROM ${BASE_IMAGE}
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # install vscode
 RUN wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add -
