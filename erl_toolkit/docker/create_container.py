@@ -2,6 +2,7 @@ import argparse
 import os.path
 import sys
 import socket
+import time
 from typing import List
 
 import docker
@@ -36,12 +37,14 @@ def create_container(
     dev: bool = False,
     gui: bool = False,
     group_add: list = None,
+    ports: list = None,
     mounts: list = None,
     privileged: bool = True,
     restart_policy: dict = None,
     tty: bool = True,
     volumes: list = None,
     user: str = None,
+    sshd: bool = False,
 ):
     client = docker.from_env()
     container = get_container(name)
@@ -106,10 +109,12 @@ def create_container(
         "/dev/shm",
     ]:
         volume_str = f"{volume}:{volume}:rw"
+        if dev and volume.startswith("/dev"):
+            continue  # skip /dev/* because /dev will be mounted
         if volume_str not in volumes:
             volumes.add(volume_str)
     if dev:
-        volumes.append("/dev:/dev")
+        volumes.add("/dev:/dev")
     for volume_str in [f"{CONFIG_DIR}:/mnt/docker_login:ro", f"{os.environ['HOME']}:/home/{user}:rw"]:
         if volume_str not in volumes:
             volumes.add(volume_str)
@@ -146,6 +151,9 @@ def create_container(
     if group_add is not None:
         for g in group_add:
             cmd = cmd + f"--group-add {g} "
+    if ports is not None:
+        for port in ports:
+            cmd = cmd + f"-p 127.0.0.1:{port} "
     if mounts is not None:
         for m in mounts:
             cmd = cmd + f"-v {m} "
@@ -168,14 +176,24 @@ def create_container(
         cmd = cmd + "--net=host -e DISPLAY "
         cmd = cmd + f"-v {os.environ['HOME']}/.Xauthority:/root/.Xauthority:rw "
     cmd = cmd + "--detach "
-    cmd = cmd + f"--hostname container-{name} "
+    cmd = cmd + f"--hostname container-{name} --add-host=container-{name}:127.0.0.1 "
     cmd = cmd + f"--name {name} "
+    cmd = cmd + "--cap-add sys_ptrace "  # required to debug program in container
     cmd = cmd + f"{image} "
     cmd = cmd + command
     logger.info(f"Container {name} is created: {cmd}")
     os.system(cmd)
 
     c = client.containers.get(name)
+    t0 = time.time()
+    while time.time() - t0 < 5:
+        if c.status == "running":
+            break
+        time.sleep(0.1)
+
+    if sshd:
+        logger.info(f"Starting SSHD in container {name}...")
+        c.exec_run(user="root", tty=True, cmd=f"/usr/sbin/sshd")
 
     if sys.platform == "linux" and user is not None:
         if user != "root":
@@ -211,6 +229,8 @@ def main():
     parser.add_argument("--user", type=str, default=f"{os.environ['USER']}", help=f"Default: {os.environ['USER']}")
     parser.add_argument("--overwrite-entrypoint", action="store_true")
     parser.add_argument("--mounts", type=str, action="append", help="Mount host directory to container")
+    parser.add_argument("--ports", type=str, nargs="+", help="Ports to map from the container to the host")
+    parser.add_argument("--sshd", action="store_true", help="Enable SSHD")
 
     args = parser.parse_args()
     entrypoint = None
@@ -236,7 +256,10 @@ def main():
         entrypoint=entrypoint,
         gpu=args.gpu,
         gui=args.gui,
+        ports=args.ports,
         mounts=args.mounts,
+        dev=args.dev,
+        sshd=args.sshd,
     )
 
 
