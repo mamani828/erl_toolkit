@@ -21,10 +21,16 @@ def login_container(name: str, user: str, shell: str):
     else:
         home = f"/home/{user}"
 
-    os.system(f"xhost +si:localuser:{user}")
-    os.system(f"docker exec --privileged --interactive --tty --env SHELL={shell} --env TERM={os.environ['TERM']} "
-              f"--env USER={user} --env=DISPLAY --env=QT_X11_NO_MITSHM=1 --user {user} "
-              f"--env HOME={home} {name} {shell} -l")
+    cmd = f"xhost +si:localuser:{user}"
+    print(cmd)
+    os.system(cmd)
+    cmd = (
+        f"docker exec --privileged --interactive --tty --env SHELL={shell} --env TERM={os.environ['TERM']} "
+        f"--env USER={user} --env=DISPLAY --env=QT_X11_NO_MITSHM=1 --user {user} "
+        f"--env HOME={home} {name} {shell} -l"
+    )
+    print(cmd)
+    os.system(cmd)
 
 
 def main():
@@ -37,5 +43,5 @@ def main():
     login_container(args.name, args.user, args.shell)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
