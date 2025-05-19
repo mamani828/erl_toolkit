@@ -31,6 +31,8 @@ setup(
             f"erl-pdf-images2pdf={pkg_name}.pdf.images2pdf:main",
             f"erl-pdf-pdf2images={pkg_name}.pdf.pdf2images:main",
             f"erl-pdf-merge-pdfs={pkg_name}.pdf.merge_pdfs:main",
+            f"erl-video-img2video={pkg_name}.video.img2video:main",
+            f"erl-video-stack-videos={pkg_name}.video.stack_videos:main",
         ]
-    )
+    ),
 )

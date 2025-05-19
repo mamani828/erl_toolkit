@@ -2,5 +2,6 @@ colorama
 colorlog
 tqdm
 docker
+ffmpeg-python
 fpdf
 PyPDF2

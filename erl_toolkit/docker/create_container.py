@@ -179,6 +179,7 @@ def create_container(
     cmd = cmd + f"--hostname container-{name} --add-host=container-{name}:127.0.0.1 "
     cmd = cmd + f"--name {name} "
     cmd = cmd + "--cap-add sys_ptrace "  # required to debug program in container
+    cmd = cmd + "--cpus=0 --memory-swap=-1 "  # gives no limits of CPU and memory-swap
     cmd = cmd + f"{image} "
     cmd = cmd + command
     logger.info(f"Container {name} is created: {cmd}")
