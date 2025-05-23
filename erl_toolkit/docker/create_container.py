@@ -180,6 +180,7 @@ def create_container(
     cmd = cmd + f"--name {name} "
     cmd = cmd + "--cap-add sys_ptrace "  # required to debug program in container
     cmd = cmd + "--cpus=0 --memory-swap=-1 "  # gives no limits of CPU and memory-swap
+    cmd = cmd + "--ipc=host "  # use the host's Inter-Process-Communication namespace
     cmd = cmd + f"{image} "
     cmd = cmd + command
     logger.info(f"Container {name} is created: {cmd}")
@@ -212,6 +213,16 @@ def create_container(
                 os.system(f"sudo rm {os.path.join(CONFIG_DIR, f)}")
             logger.info(f"Add user {user} to sudo group...")
             c.exec_run(user="root", tty=True, cmd=f"bash -c 'usermod -aG sudo {user}'")
+            if gui:
+                logger.info(f"Creating /run/user/$(id -u {user}) in container {name}...")
+                c.exec_run(user="root", tty=True, cmd=f"bash -c 'mkdir -p /run/user/$(id -u {user})'")
+                c.exec_run(user="root", tty=True, cmd=f"bash -c 'chown {user}:{user} /run/user/$(id -u {user})'")
+                logger.info(f"Setting XDG_RUNTIME_DIR in container {name}...")
+                c.exec_run(
+                    user="root",
+                    tty=True,
+                    cmd="bash -c \"echo 'export XDG_RUNTIME_DIR=/run/user/$(id -u $USER)' >> /etc/profile\"",
+                )
     else:
         print(f"YOU MAY NEED TO LOGIN AS ROOT TO CREATE USER {user} at first:")
         print(f"erl-login-container --name {name} --user root")
