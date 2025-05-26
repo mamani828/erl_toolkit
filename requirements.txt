@@ -5,3 +5,4 @@ docker
 ffmpeg-python
 fpdf
 PyPDF2
+opencv-python
