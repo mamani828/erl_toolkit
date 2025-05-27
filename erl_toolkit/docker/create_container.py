@@ -46,6 +46,9 @@ def create_container(
     user: str = None,
     sshd: bool = False,
 ):
+    if "ERL_IN_CONTAINER" in os.environ:
+        logger.warning(f"You are in the container {os.environ['ERL_IN_CONTAINER']}")
+        return
     client = docker.from_env()
     container = get_container(name)
     if container is not None:
