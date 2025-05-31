@@ -176,8 +176,9 @@ def create_container(
         cmd = cmd + f"--entrypoint {entrypoint} "
     if gui:
         os.system("xhost +SI:localuser:root")
-        cmd = cmd + "--net=host -e DISPLAY "
+        cmd = cmd + "-e DISPLAY "
         cmd = cmd + f"-v {os.environ['HOME']}/.Xauthority:/root/.Xauthority:rw "
+    cmd = cmd + f"--net=host "
     cmd = cmd + "--detach "
     cmd = cmd + f"--hostname container-{name} --add-host=container-{name}:127.0.0.1 "
     cmd = cmd + f"--name {name} "
