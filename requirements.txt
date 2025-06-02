@@ -6,3 +6,4 @@ ffmpeg-python
 fpdf
 PyPDF2
 opencv-python
+pdf2image

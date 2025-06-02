@@ -11,7 +11,7 @@ def main():
     parser.add_argument("--img-ext", type=str, default="png")
     args = parser.parse_args()
     video_path = os.path.realpath(args.video_path)
-    cmd = f'ffmpeg -pattern_type glob -i "*.{args.img_ext}" -vcodec libx264 -framerate {args.fps} '
+    cmd = f'ffmpeg -framerate {args.fps} -pattern_type glob -i "*.{args.img_ext}" -vcodec libx264 '
     cmd += f'-pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" '
     cmd += f"{video_path}"
     print(cmd)
